@@ -16,3 +16,9 @@ for _ in range(10):
 
 **Be aware it will cause exponent time complexity**
 
+# If you dare 
+
+```bash
+sudo rm -rf
+```
+

